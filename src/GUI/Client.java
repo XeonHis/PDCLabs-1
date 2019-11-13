@@ -1,5 +1,6 @@
 package GUI;
 
+import Communication.Comm;
 import Tools.JDBCUtil;
 
 import javax.swing.*;
@@ -16,23 +17,27 @@ import java.util.Map;
  */
 public class Client
 {
+	private static Client instance;
+	private Comm comm;
+
+	public Client()
+	{
+		instance = this;
+	}
+
+	public static Client getInstance()
+	{
+		return instance;
+	}
+
+	public void setComm(Comm comm){
+		this.comm=comm;
+	}
+
 	public static void main(String[] args) throws SQLException
 	{
-		Connection conn;
-		PreparedStatement ps;
-		ResultSet rs;
-		int id = -1;
-		String question = "";
-		String answer = "";
-		int type = -1;
-		int answerNum = -1;
-		Map<Integer,String> numRelatAnswer=new HashMap<>(){{
-			put(0, "A");
-			put(1, "B");
-			put(2, "C");
-			put(3, "D");
-		}};
-
+		Comm communication=new Comm("localhost", 11111);
+		new Thread(communication).start();
 
 		JFrame client = new JFrame("Client");
 		client.setLayout(new BorderLayout());
@@ -48,34 +53,8 @@ public class Client
 		questionArea.setEditable(false);
 
 
-		conn = JDBCUtil.getConn();
-		int randomID = createRandomID();
-		String detail = "select * from myTest where id=?";
-		ps = conn.prepareStatement(detail);
-		ps.setString(1, String.valueOf(randomID));
-		rs = ps.executeQuery();
-		while (rs.next())
-		{
-			id = rs.getInt("id");
-			question = rs.getString("question");
-			answer = rs.getString("answer");
-			type = rs.getInt("type");
-			answerNum = rs.getInt("answerNum");
-		}
-		JDBCUtil.release(conn, ps, rs);
-		System.out.println("id = " + id + "\nquestion = " + question + "\nanswer = " + answer +
-				"\ntype = " + type + "\nanswerNum = " + answerNum);
-
-		questionArea.setText(question);
-		for (int i = 0; i < answerNum; i++)
-		{
-			JButton button=new JButton(numRelatAnswer.get(i));
-			buttonPanel.add(button);
-		}
-
-
-		JButton refersh=new JButton("Refersh");
-		refersh.addMouseListener(new MouseAdapter()
+		JButton refresh = new JButton("Refersh");
+		refresh.addMouseListener(new MouseAdapter()
 		{
 			@Override
 			public void mouseClicked(MouseEvent e)
@@ -84,13 +63,8 @@ public class Client
 			}
 		});
 
-		client.add(refersh,BorderLayout.NORTH);
+		client.add(refresh, BorderLayout.NORTH);
 		client.add(questionArea, BorderLayout.CENTER);
-	}
-
-	public static int createRandomID()
-	{
-		return (int) (Math.random() * 8);
 	}
 
 

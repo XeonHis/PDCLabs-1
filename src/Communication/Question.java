@@ -69,4 +69,11 @@ public class Question implements Serializable
 		questionDetail.put("type", type);
 		questionDetail.put("answerNum", answerNum);
 	}
+	public void setFlag(String flag){
+		questionDetail.put("flag", flag);
+	}
+
+	public String getFlag(){
+		return (String)questionDetail.get("flag");
+	}
 }
