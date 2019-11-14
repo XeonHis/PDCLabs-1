@@ -12,7 +12,7 @@ import java.net.Socket;
  * @author paulalan
  * @create 2019/11/13 20:32
  */
-public class Comm implements Runnable
+public class Communication implements Runnable
 {
 	private Client client = Client.getInstance();
 	private String hostname;
@@ -20,9 +20,9 @@ public class Comm implements Runnable
 	private Socket s;
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
-//	Question questionDetail=new Question();
+	Question questionDetail=new Question();
 
-	public Comm(String hostname, int port)
+	public Communication(String hostname, int port)
 	{
 		this.hostname = hostname;
 		this.port = port;
@@ -44,7 +44,7 @@ public class Comm implements Runnable
 			while (s.isConnected())
 			{
 				ois = new ObjectInputStream(s.getInputStream());
-				Question questionDetail=(Question) ois.readObject();
+				questionDetail=(Question) ois.readObject();
 				System.out.println(questionDetail.toString());
 
 				System.out.println("id = " + questionDetail.getId() + "\nquestion = " + questionDetail.getQuestion() +
@@ -76,5 +76,9 @@ public class Comm implements Runnable
 		{
 			e.printStackTrace();
 		}
+	}
+
+	public Question getQuestion(){
+		return questionDetail;
 	}
 }

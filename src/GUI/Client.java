@@ -1,15 +1,12 @@
 package GUI;
 
-import Communication.Comm;
-import Tools.JDBCUtil;
+import Communication.Communication;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author paulalan
@@ -18,7 +15,7 @@ import java.util.Map;
 public class Client
 {
 	private static Client instance;
-	private Comm comm;
+	private Communication communication;
 
 	public Client()
 	{
@@ -30,13 +27,13 @@ public class Client
 		return instance;
 	}
 
-	public void setComm(Comm comm){
-		this.comm=comm;
+	public void setCommunication(Communication communication){
+		this.communication = communication;
 	}
 
-	public static void main(String[] args) throws SQLException
+	public static void main(String[] args)
 	{
-		Comm communication=new Comm("localhost", 11111);
+		Communication communication=new Communication("localhost", 11111);
 		new Thread(communication).start();
 
 		JFrame client = new JFrame("Client");
@@ -50,10 +47,11 @@ public class Client
 		client.add(buttonPanel, BorderLayout.SOUTH);
 
 		JTextArea questionArea = new JTextArea();
+		questionArea.setText(communication.getQuestion().getQuestion());
 		questionArea.setEditable(false);
 
 
-		JButton refresh = new JButton("Refersh");
+		JButton refresh = new JButton("Refresh");
 		refresh.addMouseListener(new MouseAdapter()
 		{
 			@Override
