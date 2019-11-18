@@ -60,7 +60,7 @@ public class Communication implements Runnable
 
 	public void connect()
 	{
-		//create message class
+		//create question class
 		Question questionDetail = new Question();
 		questionDetail.setFlag("acquire");
 		//send
@@ -80,5 +80,12 @@ public class Communication implements Runnable
 
 	public Question getQuestion(){
 		return questionDetail;
+	}
+	public void acquireQuestion(){
+		//create question class
+		Question questionDetail = new Question();
+		questionDetail.setFlag("acquire");
+		//send
+		send(questionDetail);
 	}
 }
